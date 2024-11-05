@@ -4,6 +4,8 @@ import 'package:newapp/widgets/category_chip.dart';
 import 'package:newapp/widgets/bottom_nav.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +26,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: 40,
             child: ListView(
               scrollDirection: Axis.horizontal,

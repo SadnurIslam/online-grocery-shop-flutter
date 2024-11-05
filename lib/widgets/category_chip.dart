@@ -5,7 +5,8 @@ class CategoryChip extends StatelessWidget {
   final bool isSelected;
   final Function() onSelected;
 
-  CategoryChip({
+  const CategoryChip({
+    super.key,
     required this.categoryName,
     this.isSelected = false,
     required this.onSelected,

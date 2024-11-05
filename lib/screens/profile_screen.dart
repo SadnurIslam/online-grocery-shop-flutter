@@ -3,6 +3,8 @@ import 'package:newapp/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context).currentUser;

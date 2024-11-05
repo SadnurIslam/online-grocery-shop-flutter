@@ -7,7 +7,8 @@ class ProductDetails extends StatelessWidget {
   final double discountPrice;
   final String description;
 
-  ProductDetails({
+  const ProductDetails({
+    super.key,
     required this.productName,
     required this.imageUrl,
     required this.price,

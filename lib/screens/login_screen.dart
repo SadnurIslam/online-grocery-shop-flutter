@@ -3,6 +3,8 @@ import 'package:newapp/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
