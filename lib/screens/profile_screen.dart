@@ -1,61 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:newapp/services/auth_service.dart';
-import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfilePage extends StatelessWidget {
+  final User user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<AuthService>(context).currentUser;
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Profile"),
-      ),
-      body: Column(
-        children: [
-          user != null
-              ? ListTile(
-                  leading: user.photoURL != null
-                      ? CircleAvatar(
-                          backgroundImage: NetworkImage(user.photoURL!),
-                        )
-                      : CircleAvatar(child: Icon(Icons.person)),
-                  title: Text(user.displayName ?? "User"),
-                  subtitle: Text(user.email ?? ""),
-                )
-              : SizedBox.shrink(),
-          ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text("Favorites"),
-            onTap: () {
-              // Navigate to favorites screen
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.history),
-            title: Text("Order History"),
-            onTap: () {
-              // Navigate to order history screen
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.support),
-            title: Text("Contact Support"),
-            onTap: () {
-              // Navigate to support screen
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.logout),
-            title: Text("Logout"),
-            onTap: () async {
-              await Provider.of<AuthService>(context, listen: false).signOut();
-              Navigator.pushReplacementNamed(context, '/login');
-            },
-          ),
-        ],
+      appBar: AppBar(title: Text('Profile')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 40,
+              backgroundImage:
+                  NetworkImage(user.photoURL ?? 'default_image_url'),
+            ),
+            SizedBox(height: 10),
+            Text(user.displayName ?? 'Guest',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(user.email ?? '', style: TextStyle(fontSize: 16)),
+          ],
+        ),
       ),
     );
   }

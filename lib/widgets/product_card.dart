@@ -5,18 +5,20 @@ class ProductCard extends StatelessWidget {
   final double price;
   final String imageUrl;
 
-  const ProductCard(
-      {super.key,
-      required this.productName,
-      required this.price,
-      required this.imageUrl});
+  const ProductCard({
+    super.key,
+    required this.productName,
+    required this.price,
+    required this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Column(
         children: [
-          Image.asset(imageUrl, fit: BoxFit.cover, height: 100),
+          // Use Image.network for images from URLs
+          Image.network(imageUrl, fit: BoxFit.cover, height: 100),
           Text(productName, style: TextStyle(fontWeight: FontWeight.bold)),
           Text('৳$price', style: TextStyle(color: Colors.green)),
           Row(

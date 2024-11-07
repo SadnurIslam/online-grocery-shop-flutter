@@ -6,6 +6,7 @@ import 'package:newapp/screens/cart_screen.dart';
 import 'package:newapp/screens/profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
+import 'package:newapp/screens/favorite_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +31,16 @@ class MyApp extends StatelessWidget {
         routes: {
           '/home': (_) => HomeScreen(),
           '/cart': (_) => CartScreen(),
-          '/profile': (_) => ProfileScreen(),
+          '/profile': (_) => ProfilePage(),
+        },
+        onGenerateRoute: (settings) {
+          if (settings.name == '/favorites') {
+            final userId = settings.arguments as String;
+            return MaterialPageRoute(
+              builder: (context) => FavoritesPage(userId: userId),
+            );
+          }
+          return null;
         },
       ),
     );
