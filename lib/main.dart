@@ -4,9 +4,9 @@ import 'package:newapp/screens/home_screen.dart';
 import 'package:newapp/screens/login_screen.dart';
 import 'package:newapp/screens/cart_screen.dart';
 import 'package:newapp/screens/profile_screen.dart';
+import 'package:newapp/screens/favorite_screen.dart';
 import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
-import 'package:newapp/screens/favorite_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
           '/home': (_) => HomeScreen(),
           '/cart': (_) => CartScreen(),
           '/profile': (_) => ProfilePage(),
+          '/login': (_) => LoginScreen(), // Added route for login screen
         },
         onGenerateRoute: (settings) {
           if (settings.name == '/favorites') {

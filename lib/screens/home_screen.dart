@@ -17,10 +17,15 @@ class _HomeScreenState extends State<HomeScreen> {
   String? selectedCategoryId;
   TextEditingController searchController = TextEditingController();
 
+  // Refresh the user state to update UI after login/logout
+  void refreshUserState() {
+    setState(() {});
+  }
+
   Future<void> _signOut(BuildContext context) async {
     await GoogleSignIn().signOut();
     await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacementNamed('/');
+    refreshUserState();
   }
 
   Stream<List<Map<String, dynamic>>> fetchCategoriesStream() {
@@ -48,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
         };
       }).toList();
 
-      // Apply search filter
       if (query.isNotEmpty) {
         return products
             .where((product) =>
@@ -97,34 +101,46 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.of(context).pushNamed('/profile');
                 },
               ),
-              ListTile(
-                leading: Icon(Icons.favorite),
-                title: Text('Favorites'),
-                onTap: () {
-                  Navigator.of(context).pushNamed('/favorites');
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.history),
-                title: Text('Order History'),
-                onTap: () {
-                  Navigator.of(context).pushNamed('/orderHistory');
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.support),
-                title: Text('Contact Support'),
-                onTap: () {
-                  Navigator.of(context).pushNamed('/support');
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.logout),
-                title: Text('Logout'),
-                onTap: () async {
-                  await _signOut(context);
-                },
-              ),
+              if (user != null) // Show Favorites only if logged in
+                ListTile(
+                  leading: Icon(Icons.favorite),
+                  title: Text('Favorites'),
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/favorites');
+                  },
+                ),
+              if (user != null) // Show Order History only if logged in
+                ListTile(
+                  leading: Icon(Icons.history),
+                  title: Text('Order History'),
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/orderHistory');
+                  },
+                ),
+              if (user != null) // Show Support only if logged in
+                ListTile(
+                  leading: Icon(Icons.support),
+                  title: Text('Contact Support'),
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/support');
+                  },
+                ),
+              if (user == null) // Show Login if logged out
+                ListTile(
+                  leading: Icon(Icons.login),
+                  title: Text('Login'),
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/login');
+                  },
+                ),
+              if (user != null) // Show Logout if logged in
+                ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text('Logout'),
+                  onTap: () async {
+                    await _signOut(context);
+                  },
+                ),
             ],
           ),
         ),
@@ -233,7 +249,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: BottomNav(),
+        bottomNavigationBar: BottomNav(
+          onCartTap: () {
+            if (user == null) {
+              // If not logged in, prompt to log in
+              Navigator.of(context).pushNamed('/login');
+            } else {
+              Navigator.of(context).pushNamed('/cart');
+            }
+          },
+        ),
       ),
     );
   }
