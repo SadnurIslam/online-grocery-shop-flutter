@@ -237,8 +237,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         final product = products[index];
                         return ProductCard(
+                          productId: product['id'],
                           productName: product['name'],
-                          price: product['price'],
+                          price: (product['price'] as num)
+                              .toDouble(), // Casting to double
+                          discountPrice: (product['discountPrice'] as num)
+                              .toDouble(), // Casting to double
                           imageUrl: product['imageUrl'],
                         );
                       },
