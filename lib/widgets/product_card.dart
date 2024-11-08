@@ -10,29 +10,31 @@ class ProductCard extends StatefulWidget {
   final String imageUrl;
 
   const ProductCard({
-    super.key,
+    Key? key,
     required this.productId,
     required this.productName,
     required this.price,
     required this.discountPrice,
     required this.imageUrl,
-  });
+  }) : super(key: key);
 
   @override
   _ProductCardState createState() => _ProductCardState();
 }
 
 class _ProductCardState extends State<ProductCard> {
-  final user = FirebaseAuth.instance.currentUser;
   bool isFavorite = false;
+  bool isInCart = false;
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
     super.initState();
-    _checkIfFavorite();
+    _checkFavoriteStatus();
+    _checkCartStatus();
   }
 
-  Future<void> _checkIfFavorite() async {
+  Future<void> _checkFavoriteStatus() async {
     if (user != null) {
       final doc = await FirebaseFirestore.instance
           .collection('users')
@@ -46,37 +48,81 @@ class _ProductCardState extends State<ProductCard> {
     }
   }
 
-  Future<void> _toggleFavorite() async {
+  Future<void> _checkCartStatus() async {
     if (user != null) {
-      final favRef = FirebaseFirestore.instance
+      final doc = await FirebaseFirestore.instance
           .collection('users')
           .doc(user!.uid)
-          .collection('favorites')
-          .doc(widget.productId);
-
-      if (isFavorite) {
-        await favRef.delete();
-      } else {
-        await favRef.set({
-          'name': widget.productName,
-          'price': widget.price,
-          'discountPrice': widget.discountPrice,
-          'imageUrl': widget.imageUrl,
-        });
-      }
+          .collection('cart')
+          .doc(widget.productId)
+          .get();
       setState(() {
-        isFavorite = !isFavorite;
+        isInCart = doc.exists;
       });
-    } else {
-      Navigator.of(context).pushNamed('/login');
     }
+  }
+
+  Future<void> _toggleFavorite() async {
+    if (user == null) {
+      Navigator.of(context).pushNamed('/login');
+      return;
+    }
+
+    final favoriteRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .collection('favorites')
+        .doc(widget.productId);
+
+    if (isFavorite) {
+      await favoriteRef.delete();
+    } else {
+      await favoriteRef.set({
+        'name': widget.productName,
+        'price': widget.price,
+        'discountPrice': widget.discountPrice,
+        'imageUrl': widget.imageUrl,
+      });
+    }
+
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
+
+  Future<void> _toggleCart() async {
+    if (user == null) {
+      Navigator.of(context).pushNamed('/login');
+      return;
+    }
+
+    final cartRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .collection('cart')
+        .doc(widget.productId);
+
+    if (isInCart) {
+      await cartRef.delete();
+    } else {
+      await cartRef.set({
+        'name': widget.productName,
+        'price': widget.price,
+        'discountPrice': widget.discountPrice,
+        'imageUrl': widget.imageUrl,
+        'quantity': 1,
+      });
+    }
+
+    setState(() {
+      isInCart = !isInCart;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to Product Details
         Navigator.of(context)
             .pushNamed('/productDetails', arguments: widget.productId);
       },
@@ -131,19 +177,18 @@ class _ProductCardState extends State<ProductCard> {
                       IconButton(
                         icon: Icon(
                           isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: isFavorite ? Colors.red : null,
+                          color: isFavorite ? Colors.red : Colors.grey,
                         ),
                         onPressed: _toggleFavorite,
                       ),
                       IconButton(
-                        icon: Icon(Icons.add_shopping_cart),
-                        onPressed: () {
-                          if (user != null) {
-                            _addToCart(user!.uid);
-                          } else {
-                            Navigator.of(context).pushNamed('/login');
-                          }
-                        },
+                        icon: Icon(
+                          isInCart
+                              ? Icons.shopping_cart
+                              : Icons.add_shopping_cart,
+                          color: isInCart ? Colors.blue : Colors.grey,
+                        ),
+                        onPressed: _toggleCart,
                       ),
                     ],
                   ),
@@ -154,21 +199,5 @@ class _ProductCardState extends State<ProductCard> {
         ),
       ),
     );
-  }
-
-  Future<void> _addToCart(String userId) async {
-    // Add product to user's cart collection in Firestore
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('cart')
-        .doc(widget.productId)
-        .set({
-      'name': widget.productName,
-      'price': widget.price,
-      'discountPrice': widget.discountPrice,
-      'imageUrl': widget.imageUrl,
-      'quantity': 1, // Starting with quantity 1
-    });
   }
 }
