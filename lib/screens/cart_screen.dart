@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:newapp/screens/checkout_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -96,9 +97,12 @@ class _CartScreenState extends State<CartScreen> {
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(15),
-        child: ElevatedButton(
+        child: // In your CartScreen, update the checkout button:
+            ElevatedButton(
           onPressed: () {
-            // Proceed to checkout
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => CheckoutScreen()),
+            );
           },
           child: Text('Checkout'),
         ),
