@@ -66,12 +66,51 @@ class _CartScreenState extends State<CartScreen> {
               final cartItem = cartItems[index];
               final productId = cartItem.id;
               final data = cartItem.data();
+              final price = data['price'];
+              final discountPrice = data['discountPrice'];
               final quantity = data['quantity'] ?? 1;
+              final isDiscounted =
+                  discountPrice != null && discountPrice < price;
 
               return ListTile(
-                leading: Image.network(data['imageUrl'], width: 50),
+                leading: Image.network(
+                  data['imageUrl'],
+                  width: 50,
+                  errorBuilder: (context, error, stackTrace) =>
+                      Icon(Icons.image_not_supported, size: 50),
+                ),
                 title: Text(data['name']),
-                subtitle: Text('৳${data['discountPrice']}'),
+                subtitle: Row(
+                  children: [
+                    if (isDiscounted)
+                      Text(
+                        '৳$discountPrice ',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
+                      ),
+                    if (isDiscounted)
+                      Text(
+                        '৳$price',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                    if (!isDiscounted)
+                      Text(
+                        '৳$price',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                  ],
+                ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -97,8 +136,7 @@ class _CartScreenState extends State<CartScreen> {
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(15),
-        child: // In your CartScreen, update the checkout button:
-            ElevatedButton(
+        child: ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => CheckoutScreen()),
