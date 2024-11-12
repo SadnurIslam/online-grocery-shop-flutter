@@ -32,16 +32,8 @@ class MyApp extends StatelessWidget {
           '/home': (_) => HomeScreen(),
           '/cart': (_) => CartScreen(),
           '/profile': (_) => ProfilePage(),
-          '/login': (_) => LoginScreen(), // Added route for login screen
-        },
-        onGenerateRoute: (settings) {
-          if (settings.name == '/favorites') {
-            final userId = settings.arguments as String;
-            return MaterialPageRoute(
-              builder: (context) => FavoritesPage(userId: userId),
-            );
-          }
-          return null;
+          '/login': (_) => LoginScreen(),
+          '/favorites': (context) => FavoritesPage(),
         },
       ),
     );
