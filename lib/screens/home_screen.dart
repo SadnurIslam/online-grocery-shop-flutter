@@ -120,9 +120,9 @@ class _HomeScreenState extends State<HomeScreen> {
               if (user != null) // Show Support only if logged in
                 ListTile(
                   leading: Icon(Icons.support),
-                  title: Text('Contact Support'),
+                  title: Text('Live Chat'),
                   onTap: () {
-                    Navigator.of(context).pushNamed('/support');
+                    Navigator.of(context).pushNamed('/chat');
                   },
                 ),
               if (user == null) // Show Login if logged out
