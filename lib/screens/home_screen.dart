@@ -74,11 +74,13 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Grocery',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            'FreshMart',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: const Color.fromARGB(255, 30, 11, 100),
+            ),
           ),
           centerTitle: true,
-          backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
           elevation: 1,
         ),

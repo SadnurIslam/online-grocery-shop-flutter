@@ -34,7 +34,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Favorites')),
+      appBar: AppBar(
+        title: Text('Favorites'),
+      ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: favoritesStream(),
         builder: (context, snapshot) {

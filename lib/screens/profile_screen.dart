@@ -54,59 +54,35 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Profile')),
+      appBar: AppBar(
+        title: Text('Profile', style: TextStyle(fontWeight: FontWeight.bold)),
+      ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(20),
         child: Column(
           children: [
             CircleAvatar(
-              radius: 40,
+              radius: 60,
               backgroundImage: NetworkImage(user?.photoURL ??
                   'https://www.gravatar.com/avatar/placeholder?d=mp'), // Using Gravatar for placeholder
-            ),
-            SizedBox(height: 10),
-            Text(user?.email ?? 'No email available',
-                style: TextStyle(
-                    fontSize: 16,
-                    color: const Color.fromARGB(255, 95, 90, 90))),
-            SizedBox(height: 20),
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
-              enabled: isEditing,
-            ),
-            TextField(
-              controller: _phoneController,
-              decoration: InputDecoration(labelText: 'Phone'),
-              keyboardType: TextInputType.phone,
-              enabled: isEditing,
-            ),
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(labelText: 'Gender'),
-              value: _selectedGender.isNotEmpty ? _selectedGender : null,
-              items: genders.map((gender) {
-                return DropdownMenuItem<String>(
-                  value: gender,
-                  child: Text(gender),
-                );
-              }).toList(),
-              onChanged: isEditing
-                  ? (value) {
-                      setState(() {
-                        _selectedGender = value ?? '';
-                      });
-                    }
-                  : null,
-              disabledHint: Text(_selectedGender.isNotEmpty
-                  ? _selectedGender
-                  : 'Select Gender'),
-            ),
-            TextField(
-              controller: _addressController,
-              decoration: InputDecoration(labelText: 'Address'),
-              enabled: isEditing,
+              backgroundColor: Colors.blueAccent,
             ),
             SizedBox(height: 20),
+            Text(
+              user?.email ?? 'No email available',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.blueGrey,
+              ),
+            ),
+            SizedBox(height: 30),
+            _buildTextField(_nameController, 'Name'),
+            _buildTextField(_phoneController, 'Phone',
+                keyboardType: TextInputType.phone),
+            _buildGenderDropdown(),
+            _buildTextField(_addressController, 'Address'),
+            SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
                 if (isEditing) {
@@ -117,10 +93,88 @@ class _ProfilePageState extends State<ProfilePage> {
                   });
                 }
               },
-              child: Text(isEditing ? 'Save' : 'Edit'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+              child: Text(
+                isEditing ? 'Save Changes' : 'Edit Profile',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 241, 234, 234)),
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label,
+      {TextInputType keyboardType = TextInputType.text}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.blueGrey),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.blueAccent),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.blueAccent),
+          ),
+        ),
+        keyboardType: keyboardType,
+        enabled: isEditing,
+      ),
+    );
+  }
+
+  Widget _buildGenderDropdown() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: 'Gender',
+          labelStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.blueGrey),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.blueAccent),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.blueAccent),
+          ),
+        ),
+        value: _selectedGender.isNotEmpty ? _selectedGender : null,
+        items: genders.map((gender) {
+          return DropdownMenuItem<String>(
+            value: gender,
+            child: Text(gender),
+          );
+        }).toList(),
+        onChanged: isEditing
+            ? (value) {
+                setState(() {
+                  _selectedGender = value ?? '';
+                });
+              }
+            : null,
+        disabledHint: Text(
+            _selectedGender.isNotEmpty ? _selectedGender : 'Select Gender'),
       ),
     );
   }

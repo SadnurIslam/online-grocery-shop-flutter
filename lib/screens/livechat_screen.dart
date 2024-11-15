@@ -32,7 +32,9 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Live Chat')),
+      appBar: AppBar(
+        title: Text('Live Chat'),
+      ),
       body: Column(
         children: [
           Expanded(

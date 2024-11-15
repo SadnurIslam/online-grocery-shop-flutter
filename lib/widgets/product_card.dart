@@ -134,9 +134,9 @@ class _ProductCardState extends State<ProductCard> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
               child: Image.network(widget.imageUrl,
-                  height: 120, fit: BoxFit.cover),
+                  height: 135, fit: BoxFit.cover),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
