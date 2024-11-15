@@ -20,9 +20,9 @@ class LoginScreen extends StatelessWidget {
               children: [
                 ClipOval(
                   child: Image.network(
-                    'https://codeforces.com/userpic.codeforces.org/2378836/title/5c17df02f66ff8ba.jpg',
-                    height: 150,
-                    width: 150,
+                    'https://img.freepik.com/free-vector/support-local-farmers-concept_23-2148596511.jpg?t=st=1731700391~exp=1731703991~hmac=5a016df3b5384dae8a0f841efde0779b2f6789f06a7f0546c2aba34b891bbaa6&w=740',
+                    height: 200,
+                    width: 200,
                     fit: BoxFit
                         .cover, // Ensures the image fits within the circular frame
                   ),
@@ -46,7 +46,7 @@ class LoginScreen extends StatelessWidget {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    backgroundColor: const Color.fromARGB(255, 192, 71, 71),
                     padding: const EdgeInsets.symmetric(
                         vertical: 12, horizontal: 20),
                     shape: RoundedRectangleBorder(
@@ -56,7 +56,9 @@ class LoginScreen extends StatelessWidget {
                   ),
                   label: const Text(
                     "Sign in with Google",
-                    style: TextStyle(color: Colors.black, fontSize: 16),
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 233, 222, 222),
+                        fontSize: 16),
                   ),
                 ),
                 const SizedBox(height: 15),

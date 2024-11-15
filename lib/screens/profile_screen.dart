@@ -66,7 +66,9 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             SizedBox(height: 10),
             Text(user?.email ?? 'No email available',
-                style: TextStyle(fontSize: 16, color: Colors.grey)),
+                style: TextStyle(
+                    fontSize: 16,
+                    color: const Color.fromARGB(255, 95, 90, 90))),
             SizedBox(height: 20),
             TextField(
               controller: _nameController,
