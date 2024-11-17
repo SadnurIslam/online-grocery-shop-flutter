@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:newapp/widgets/payment_page.dart';
 
 class CheckoutScreen extends StatefulWidget {
   @override
@@ -87,7 +88,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    // Add order confirmation or payment logic here
+                    // Navigate to PaymentPage with totalPrice
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            PaymentPage(totalPrice: totalPrice),
+                      ),
+                    );
                   },
                   child: Text('Confirm Order'),
                 ),
