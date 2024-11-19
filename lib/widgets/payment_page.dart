@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newapp/payments/bkash_account.dart';
 
 class PaymentPage extends StatefulWidget {
   final double totalPrice;
@@ -94,12 +95,13 @@ class _PaymentPageState extends State<PaymentPage> {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: selectedPaymentMethod != null
+                  onPressed: selectedPaymentMethod == 'Bkash'
                       ? () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  'Proceeding with $selectedPaymentMethod payment'),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BkashAccountPage(
+                                  totalPrice: widget.totalPrice),
                             ),
                           );
                         }

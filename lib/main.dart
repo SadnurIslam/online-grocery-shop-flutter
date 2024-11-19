@@ -8,6 +8,7 @@ import 'package:newapp/screens/favorite_screen.dart';
 import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
 import 'screens/livechat_screen.dart';
+import 'screens/order_history.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           '/login': (_) => LoginScreen(),
           '/favorites': (context) => FavoritesPage(),
           '/chat': (context) => LiveChatScreen(),
+          '/orders': (context) => OrderHistoryScreen(),
         },
       ),
     );

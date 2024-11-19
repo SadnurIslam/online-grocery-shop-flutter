@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   leading: Icon(Icons.history),
                   title: Text('Order History'),
                   onTap: () {
-                    Navigator.of(context).pushNamed('/orderHistory');
+                    Navigator.of(context).pushNamed('/orders');
                   },
                 ),
               if (user != null) // Show Support only if logged in
