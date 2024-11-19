@@ -53,36 +53,44 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Colors.green.shade600; // Align with grocery theme
+    final accentColor = Colors.white;
+    final inputFieldColor = Colors.green.shade50;
+
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: primaryColor,
         title: Text('Profile', style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(16),
         child: Column(
           children: [
             CircleAvatar(
               radius: 60,
               backgroundImage: NetworkImage(user?.photoURL ??
-                  'https://www.gravatar.com/avatar/placeholder?d=mp'), // Using Gravatar for placeholder
-              backgroundColor: Colors.blueAccent,
+                  'https://www.gravatar.com/avatar/placeholder?d=mp'),
+              backgroundColor: Colors.green.shade200,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 16),
             Text(
               user?.email ?? 'No email available',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.blueGrey,
+                color: Colors.grey.shade700,
               ),
             ),
-            SizedBox(height: 30),
-            _buildTextField(_nameController, 'Name'),
-            _buildTextField(_phoneController, 'Phone',
-                keyboardType: TextInputType.phone),
-            _buildGenderDropdown(),
-            _buildTextField(_addressController, 'Address'),
-            SizedBox(height: 30),
+            SizedBox(height: 24),
+            _buildProfileSection(
+                'Name', _nameController, primaryColor, inputFieldColor),
+            _buildProfileSection(
+                'Phone', _phoneController, primaryColor, inputFieldColor,
+                isPhone: true),
+            _buildGenderDropdown(primaryColor, inputFieldColor),
+            _buildProfileSection(
+                'Address', _addressController, primaryColor, inputFieldColor),
+            SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
                 if (isEditing) {
@@ -94,17 +102,18 @@ class _ProfilePageState extends State<ProfilePage> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                backgroundColor: primaryColor,
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 40),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               child: Text(
                 isEditing ? 'Save Changes' : 'Edit Profile',
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 241, 234, 234)),
+                    color: accentColor),
               ),
             ),
           ],
@@ -113,8 +122,9 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label,
-      {TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildProfileSection(String label, TextEditingController controller,
+      Color borderColor, Color backgroundColor,
+      {bool isPhone = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: TextField(
@@ -122,41 +132,41 @@ class _ProfilePageState extends State<ProfilePage> {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.blueGrey),
+              fontSize: 16, fontWeight: FontWeight.w600, color: borderColor),
+          fillColor: backgroundColor,
+          filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(color: Colors.blueAccent),
+            borderSide: BorderSide(color: borderColor),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(color: Colors.blueAccent),
+            borderSide: BorderSide(color: borderColor),
           ),
         ),
-        keyboardType: keyboardType,
+        keyboardType: isPhone ? TextInputType.phone : TextInputType.text,
         enabled: isEditing,
       ),
     );
   }
 
-  Widget _buildGenderDropdown() {
+  Widget _buildGenderDropdown(Color borderColor, Color backgroundColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: DropdownButtonFormField<String>(
         decoration: InputDecoration(
           labelText: 'Gender',
           labelStyle: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.blueGrey),
+              fontSize: 16, fontWeight: FontWeight.w600, color: borderColor),
+          fillColor: backgroundColor,
+          filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(color: Colors.blueAccent),
+            borderSide: BorderSide(color: borderColor),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(color: Colors.blueAccent),
+            borderSide: BorderSide(color: borderColor),
           ),
         ),
         value: _selectedGender.isNotEmpty ? _selectedGender : null,
