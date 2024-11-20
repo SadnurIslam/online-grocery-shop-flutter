@@ -11,22 +11,37 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final User? user = FirebaseAuth.instance.currentUser;
 
-  // Send a message
   Future<void> sendMessage(String message) async {
-    if (message.trim().isEmpty) return;
+    if (message.trim().isEmpty || user == null) return;
 
-    await FirebaseFirestore.instance
-        .collection('chats')
-        .doc(user!.uid)
-        .collection('messages')
-        .add({
+    final chatDoc =
+        FirebaseFirestore.instance.collection('chats').doc(user!.uid);
+
+    await chatDoc.set({
+      'participants': [user!.uid, 'admin'],
+      'lastMessage': message,
+      'lastUpdated': FieldValue.serverTimestamp(),
+      'unseenByAdmin': FieldValue.increment(1),
+    }, SetOptions(merge: true));
+
+    await chatDoc.collection('messages').add({
       'senderId': user!.uid,
       'message': message,
       'timestamp': FieldValue.serverTimestamp(),
-      'isAdmin': false, // To identify user vs admin messages
+      'isAdmin': false,
+      'seen': false,
     });
 
     _messageController.clear();
+  }
+
+  Stream<QuerySnapshot> getMessagesStream() {
+    return FirebaseFirestore.instance
+        .collection('chats')
+        .doc(user?.uid)
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
   }
 
   @override
@@ -34,19 +49,13 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Live Chat'),
-        backgroundColor: Colors.green, // Consistent FreshMart theme
+        backgroundColor: Colors.green,
       ),
       body: Column(
         children: [
-          // Chat messages list
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('chats')
-                  .doc(user!.uid)
-                  .collection('messages')
-                  .orderBy('timestamp', descending: true)
-                  .snapshots(),
+              stream: getMessagesStream(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
@@ -58,9 +67,8 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
                   reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
-                    final messageData = messages[index];
-                    final isAdmin = messageData['isAdmin'] as bool;
-                    final message = messageData['message'];
+                    final message = messages[index];
+                    final isAdmin = message['isAdmin'] as bool;
 
                     return Align(
                       alignment: isAdmin
@@ -84,7 +92,7 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
                           ),
                         ),
                         child: Text(
-                          message,
+                          message['message'] as String,
                           style: TextStyle(
                             fontSize: 16,
                             color: isAdmin ? Colors.black : Colors.green[800],
@@ -97,23 +105,17 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
               },
             ),
           ),
-
-          // Message input field
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+            padding: EdgeInsets.all(12.0),
             child: Row(
               children: [
-                // Text input field
                 Expanded(
                   child: TextField(
                     controller: _messageController,
                     decoration: InputDecoration(
                       hintText: 'Type your message...',
-                      hintStyle: TextStyle(color: Colors.grey),
                       filled: true,
                       fillColor: Colors.grey[200],
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 14.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
                         borderSide: BorderSide.none,
@@ -122,8 +124,6 @@ class _LiveChatScreenState extends State<LiveChatScreen> {
                   ),
                 ),
                 SizedBox(width: 8),
-
-                // Send button
                 CircleAvatar(
                   radius: 24,
                   backgroundColor: Colors.green,

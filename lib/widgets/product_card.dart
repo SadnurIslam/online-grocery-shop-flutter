@@ -8,15 +8,16 @@ class ProductCard extends StatefulWidget {
   final double price;
   final double discountPrice;
   final String imageUrl;
-
-  const ProductCard({
-    Key? key,
-    required this.productId,
-    required this.productName,
-    required this.price,
-    required this.discountPrice,
-    required this.imageUrl,
-  }) : super(key: key);
+  final String weight;
+  const ProductCard(
+      {Key? key,
+      required this.productId,
+      required this.productName,
+      required this.price,
+      required this.discountPrice,
+      required this.imageUrl,
+      required this.weight})
+      : super(key: key);
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -82,6 +83,7 @@ class _ProductCardState extends State<ProductCard> {
         'price': widget.price,
         'discountPrice': widget.discountPrice,
         'imageUrl': widget.imageUrl,
+        'weight': widget.weight,
       });
     }
 
@@ -143,10 +145,10 @@ class _ProductCardState extends State<ProductCard> {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
                   child: Image.network(
                     widget.imageUrl,
-                    height: 135,
+                    height: 116,
                     width: double
                         .infinity, // Ensures the image fills the width of the card
-                    fit: BoxFit.cover, // Use BoxFit.cover for proper scaling
+                    fit: BoxFit.fill,
                   ),
                 ),
                 if (widget.discountPrice < widget.price)
@@ -176,12 +178,21 @@ class _ProductCardState extends State<ProductCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Product Name
                   Text(
                     widget.productName,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
+
+                  // Weight
+                  Text(
+                    widget.weight, // Display the weight field here
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+
+                  // Price Section
                   Row(
                     children: [
                       if (widget.discountPrice < widget.price)
@@ -204,6 +215,8 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                     ],
                   ),
+
+                  // Favorite and Cart Buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

@@ -250,6 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           price: product['price'],
                           discountPrice: product['discountPrice'],
                           imageUrl: product['imageUrl'],
+                          weight: product['weight'] ?? '1 kg',
                         );
                       },
                     );
