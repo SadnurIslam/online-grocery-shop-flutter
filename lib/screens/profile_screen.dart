@@ -23,23 +23,34 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _loadUserProfile() async {
-    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+    if (user == null) return;
+
+    final DocumentSnapshot profileDoc = await FirebaseFirestore.instance
         .collection('users')
-        .doc(user?.uid)
+        .doc(user!.uid)
+        .collection('profiles')
+        .doc('profile') // Assuming a single profile document
         .get();
 
-    if (userDoc.exists) {
+    if (profileDoc.exists) {
       setState(() {
-        _nameController.text = userDoc['name'] ?? user?.displayName ?? '';
-        _phoneController.text = userDoc['phone'] ?? '';
-        _addressController.text = userDoc['address'] ?? '';
-        _selectedGender = userDoc['gender'] ?? '';
+        _nameController.text = profileDoc['name'] ?? user?.displayName ?? '';
+        _phoneController.text = profileDoc['phone'] ?? '';
+        _addressController.text = profileDoc['address'] ?? '';
+        _selectedGender = profileDoc['gender'] ?? '';
       });
     }
   }
 
   Future<void> _updateUserProfile() async {
-    await FirebaseFirestore.instance.collection('users').doc(user?.uid).set({
+    if (user == null) return;
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .collection('profiles')
+        .doc('profile') // Assuming a single profile document
+        .set({
       'name': _nameController.text,
       'phone': _phoneController.text,
       'address': _addressController.text,

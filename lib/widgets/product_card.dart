@@ -141,8 +141,13 @@ class _ProductCardState extends State<ProductCard> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                  child: Image.network(widget.imageUrl,
-                      height: 135, fit: BoxFit.cover),
+                  child: Image.network(
+                    widget.imageUrl,
+                    height: 135,
+                    width: double
+                        .infinity, // Ensures the image fills the width of the card
+                    fit: BoxFit.cover, // Use BoxFit.cover for proper scaling
+                  ),
                 ),
                 if (widget.discountPrice < widget.price)
                   Positioned(
