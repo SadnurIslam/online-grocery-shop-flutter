@@ -100,29 +100,59 @@ class BkashPinPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('bKash Payment')),
+      appBar: AppBar(
+        title: Text('bKash Payment'),
+        backgroundColor: Colors.pink,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Enter your bKash PIN',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+            // Logo and Heading
+            Column(
+              children: [
+                Image.network(
+                  'https://ahkhan.com/wp-content/uploads/2018/07/Bkash-Customer-Care1.png',
+                  height: 80,
+                  fit: BoxFit.contain,
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'Enter your bKash PIN',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 30),
+
+            // PIN Input Field
             TextField(
               controller: pinController,
               obscureText: true,
               keyboardType: TextInputType.number,
+              maxLength: 5,
               decoration: InputDecoration(
                 hintText: 'Enter 5-digit PIN',
-                border: OutlineInputBorder(),
+                counterText: '', // Hide the counter below the TextField
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                filled: true,
+                fillColor: Colors.grey[100],
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 30),
+
+            // Confirm Button
             ElevatedButton(
               onPressed: () async {
+                // Validate PIN input
                 if (pinController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Please enter your bKash PIN.')),
@@ -130,18 +160,31 @@ class BkashPinPage extends StatelessWidget {
                   return;
                 }
 
-                // Validate PIN length (optional, you can customize this)
                 if (pinController.text.length != 5) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('PIN must be 5 digits.')),
+                    SnackBar(content: Text('PIN must be exactly 5 digits.')),
                   );
                   return;
                 }
 
-                // Call the confirm order function
+                // Confirm order if validation passes
                 await _confirmOrder(context);
               },
-              child: Text('CONFIRM'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.pink,
+                padding: EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                'CONFIRM',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ],
         ),

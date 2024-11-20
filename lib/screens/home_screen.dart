@@ -30,9 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Stream<List<Map<String, dynamic>>> fetchCategoriesStream() {
     return FirebaseFirestore.instance.collection('categories').snapshots().map(
-        (snapshot) => snapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
-            .toList());
+          (snapshot) => snapshot.docs
+              .map((doc) => {
+                    'id': doc.id, // Use document ID as the category ID
+                    'name': doc['name'],
+                  })
+              .toList(),
+        );
   }
 
   Stream<List<Map<String, dynamic>>> fetchProductsStream() {
@@ -48,8 +52,10 @@ class _HomeScreenState extends State<HomeScreen> {
       final products = snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         return {
+          'id': doc.id, // Use document ID as the product ID
           ...data,
           'price': (data['price'] as num).toDouble(),
+          'discountPrice': (data['discountPrice'] as num?)?.toDouble(),
         };
       }).toList();
 
@@ -241,10 +247,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         return ProductCard(
                           productId: product['id'],
                           productName: product['name'],
-                          price: (product['price'] as num)
-                              .toDouble(), // Casting to double
-                          discountPrice: (product['discountPrice'] as num)
-                              .toDouble(), // Casting to double
+                          price: product['price'],
+                          discountPrice: product['discountPrice'],
                           imageUrl: product['imageUrl'],
                         );
                       },

@@ -14,27 +14,41 @@ class _PaymentPageState extends State<PaymentPage> {
   String? selectedPaymentMethod;
 
   Widget _buildPaymentOption(String method, String imageUrl) {
-    return ListTile(
-      leading: SizedBox(
-        width: 50,
-        height: 50,
-        child: Image.network(
-          imageUrl,
-          fit: BoxFit.contain,
-          errorBuilder: (context, error, stackTrace) {
-            return Icon(Icons.image_not_supported, size: 50);
-          },
-        ),
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
       ),
-      title: Text(method),
-      trailing: selectedPaymentMethod == method
-          ? Icon(Icons.check_circle, color: Colors.green)
-          : null,
-      onTap: () {
-        setState(() {
-          selectedPaymentMethod = method;
-        });
-      },
+      child: ListTile(
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.network(
+            imageUrl,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(Icons.image_not_supported, size: 50);
+            },
+          ),
+        ),
+        title: Text(
+          method,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+        ),
+        trailing: selectedPaymentMethod == method
+            ? Icon(Icons.check_circle, color: Colors.green)
+            : null,
+        onTap: () {
+          setState(() {
+            selectedPaymentMethod = method;
+          });
+        },
+      ),
     );
   }
 
@@ -43,18 +57,25 @@ class _PaymentPageState extends State<PaymentPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Select Payment Method'),
+        backgroundColor: Colors.pink,
       ),
       body: Column(
         children: [
+          // Heading
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Please select your mode of Payment Method',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              'Please select your preferred Payment Method',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
           Expanded(
+            // Payment Method List
             child: ListView(
               children: [
                 _buildPaymentOption(
@@ -63,11 +84,11 @@ class _PaymentPageState extends State<PaymentPage> {
                 ),
                 _buildPaymentOption(
                   'Nagad',
-                  'https://upload.wikimedia.org/wikipedia/en/thumb/8/88/Nagad_Logo_2024.svg/220px-Nagad_Logo_2024.svg.png',
+                  'https://finclusion.sg/wp-content/uploads/2020/12/nagad-logo.png',
                 ),
                 _buildPaymentOption(
                   'Rocket',
-                  'https://futurestartup.b-cdn.net/wp-content/uploads/2016/09/DBBL-Mobile-Banking-Becomes-Rocket.jpg',
+                  'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh9MGrnY31hCji4jMRyJfPWA3cff1b6fIQSB32whxH49-In7B17iDATl0-8nynH1AjJm0SN-fbv6Qitpdzvqw1vjuanBUvNxGUBjD2_vuzB5RVRmC9YuYGL6609W7X_H5MOOEdJUh7pSRx0/w250-h320/dutch-bangla-rocket.jpg',
                 ),
                 _buildPaymentOption(
                   'Upay',
@@ -80,20 +101,25 @@ class _PaymentPageState extends State<PaymentPage> {
               ],
             ),
           ),
+          // Total Price & Proceed Button
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Total Price Display
                 Text(
-                  'Total: ৳${widget.totalPrice}',
+                  'Total: ৳${widget.totalPrice.toStringAsFixed(2)}',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
+                    color: Colors.green,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 20),
+
+                // Proceed Button
                 ElevatedButton(
                   onPressed: selectedPaymentMethod == 'Bkash'
                       ? () {
@@ -101,16 +127,27 @@ class _PaymentPageState extends State<PaymentPage> {
                             context,
                             MaterialPageRoute(
                               builder: (_) => BkashAccountPage(
-                                  totalPrice: widget.totalPrice),
+                                totalPrice: widget.totalPrice,
+                              ),
                             ),
                           );
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pink, // Button color
                     padding: EdgeInsets.symmetric(vertical: 16),
-                    textStyle: TextStyle(fontSize: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                  child: Text('PROCEED TO PAYMENT'),
+                  child: Text(
+                    'PROCEED TO PAYMENT',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ],
             ),

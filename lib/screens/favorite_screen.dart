@@ -36,6 +36,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Favorites'),
+        backgroundColor: Colors.green, // Consistent FreshMart theme
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: favoritesStream(),
@@ -44,12 +45,42 @@ class _FavoritesPageState extends State<FavoritesPage> {
             return Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No favorites yet.'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.favorite_border,
+                    color: Colors.grey,
+                    size: 80,
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'No favorites yet!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  Text(
+                    'Add your favorite products here.',
+                    style: TextStyle(fontSize: 16, color: Colors.grey[500]),
+                  ),
+                ],
+              ),
+            );
           }
 
           final favorites = snapshot.data!.docs;
 
-          return ListView.builder(
+          return GridView.builder(
+            padding: EdgeInsets.all(8.0),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8.0,
+              mainAxisSpacing: 8.0,
+              childAspectRatio: 0.7,
+            ),
             itemCount: favorites.length,
             itemBuilder: (context, index) {
               final favoriteItem = favorites[index];
@@ -60,48 +91,100 @@ class _FavoritesPageState extends State<FavoritesPage> {
               final isDiscounted =
                   discountPrice != null && discountPrice < price;
 
-              return ListTile(
-                title: Text(data['name']),
-                subtitle: Row(
+              return Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (isDiscounted)
-                      Text(
-                        '৳$discountPrice ',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
+                    // Product Image
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(12),
+                        ),
+                        child: Image.network(
+                          data['imageUrl'],
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Icon(Icons.image_not_supported, size: 50),
                         ),
                       ),
-                    if (isDiscounted)
-                      Text(
-                        '৳$price',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                          decoration: TextDecoration.lineThrough,
+                    ),
+
+                    // Product Details
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Product Name
+                          Text(
+                            data['name'],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+
+                          // Product Price
+                          SizedBox(height: 4),
+                          Row(
+                            children: [
+                              if (isDiscounted)
+                                Text(
+                                  '৳$discountPrice',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              if (isDiscounted) SizedBox(width: 8),
+                              if (isDiscounted)
+                                Text(
+                                  '৳$price',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
+                                ),
+                              if (!isDiscounted)
+                                Text(
+                                  '৳$price',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Remove Button
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: OutlinedButton.icon(
+                        onPressed: () => removeFavorite(productId),
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        label: Text(
+                          'Remove',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.red),
                         ),
                       ),
-                    if (!isDiscounted)
-                      Text(
-                        '৳$price',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
+                    ),
                   ],
-                ),
-                leading: Image.network(
-                  data['imageUrl'],
-                  width: 50,
-                  errorBuilder: (context, error, stackTrace) =>
-                      Icon(Icons.image_not_supported, size: 50),
-                ),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => removeFavorite(productId),
                 ),
               );
             },
