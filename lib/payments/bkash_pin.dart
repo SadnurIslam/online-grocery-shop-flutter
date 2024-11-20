@@ -65,18 +65,25 @@ class BkashPinPage extends StatelessWidget {
         return;
       }
 
-      // Save the order in the 'orders' subcollection
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('orders')
-          .add({
+      // Create the order data
+      final orderData = {
         'products': products,
         'totalPrice': totalOrderPrice,
         'paymentMethod': 'Bkash',
         'status': 'Confirmed',
         'timestamp': FieldValue.serverTimestamp(),
-      });
+        'userId': userId, // Include userId for the top-level orders collection
+      };
+
+      // Save the order in the user's 'orders' subcollection
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('orders')
+          .add(orderData);
+
+      // Save the order in the top-level 'orders' collection
+      await FirebaseFirestore.instance.collection('orders').add(orderData);
 
       // Clear the cart after the order is placed
       for (var doc in cartSnapshot.docs) {
