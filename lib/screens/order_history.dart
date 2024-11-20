@@ -42,6 +42,7 @@ class OrderHistoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Order History'),
+        backgroundColor: Colors.green,
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _fetchOrderHistory(),
@@ -51,13 +52,18 @@ class OrderHistoryScreen extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error fetching orders.'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No orders found.'));
+            return Center(
+              child: Text(
+                'No orders found.',
+                style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+              ),
+            );
           }
 
           final orders = snapshot.data!;
 
           return ListView.builder(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(10.0),
             itemCount: orders.length,
             itemBuilder: (context, index) {
               final order = orders[index];
@@ -68,41 +74,64 @@ class OrderHistoryScreen extends StatelessWidget {
               final timestamp = order['timestamp'];
 
               return Card(
-                elevation: 4,
-                margin: EdgeInsets.symmetric(vertical: 8.0),
+                elevation: 5,
+                margin: EdgeInsets.only(bottom: 12.0),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.all(12.0),
+                  padding: EdgeInsets.all(15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Order ID: ${order['id']}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        'Date: ${_formatDate(timestamp)}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                      // Order Header
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Order ID: ${order['id']}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          Text(
+                            _formatDate(timestamp),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 8),
-                      Text(
-                        'Total: ৳$totalPrice',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
+
+                      // Order Summary
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Total: ৳$totalPrice',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green[800],
+                            ),
+                          ),
+                          Text(
+                            status,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: status == 'Confirmed'
+                                  ? Colors.green
+                                  : Colors.red,
+                            ),
+                          ),
+                        ],
                       ),
+                      SizedBox(height: 6),
                       Text(
                         'Payment: $paymentMethod',
                         style: TextStyle(
@@ -110,16 +139,10 @@ class OrderHistoryScreen extends StatelessWidget {
                           color: Colors.grey[800],
                         ),
                       ),
-                      Text(
-                        'Status: $status',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color:
-                              status == 'Confirmed' ? Colors.green : Colors.red,
-                        ),
-                      ),
-                      SizedBox(height: 8),
+                      SizedBox(height: 10),
                       Divider(),
+
+                      // Products List
                       Text(
                         'Products:',
                         style: TextStyle(
@@ -128,14 +151,20 @@ class OrderHistoryScreen extends StatelessWidget {
                           color: Colors.black87,
                         ),
                       ),
+                      SizedBox(height: 8),
                       ...products.map<Widget>((product) {
                         return ListTile(
                           contentPadding: EdgeInsets.zero,
-                          leading: Image.network(
-                            product['imageUrl'],
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              product['imageUrl'],
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.image_not_supported, size: 50),
+                            ),
                           ),
                           title: Text(
                             product['name'],
@@ -143,10 +172,14 @@ class OrderHistoryScreen extends StatelessWidget {
                           ),
                           subtitle: Text(
                             '${product['quantity']} x ৳${product['discountPrice']}',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
                           ),
                           trailing: Text(
                             '৳${product['quantity'] * product['discountPrice']}',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
                           ),
                         );
                       }).toList(),
