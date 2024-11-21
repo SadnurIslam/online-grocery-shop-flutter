@@ -145,7 +145,7 @@ class _ProductCardState extends State<ProductCard> {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
                   child: Image.network(
                     widget.imageUrl,
-                    height: 116,
+                    height: 133,
                     width: double
                         .infinity, // Ensures the image fills the width of the card
                     fit: BoxFit.fill,

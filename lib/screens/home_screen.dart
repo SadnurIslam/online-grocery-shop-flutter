@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return FirebaseFirestore.instance.collection('categories').snapshots().map(
           (snapshot) => snapshot.docs
               .map((doc) => {
-                    'id': doc.id, // Use document ID as the category ID
+                    'id': doc.id,
                     'name': doc['name'],
                   })
               .toList(),
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final products = snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         return {
-          'id': doc.id, // Use document ID as the product ID
+          'id': doc.id,
           ...data,
           'price': (data['price'] as num).toDouble(),
           'discountPrice': (data['discountPrice'] as num?)?.toDouble(),
@@ -83,14 +83,16 @@ class _HomeScreenState extends State<HomeScreen> {
             'FreshMart',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: const Color.fromARGB(255, 30, 11, 100),
+              fontSize: 20,
+              color: Colors.white,
             ),
           ),
           centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.black),
-          elevation: 1,
+          backgroundColor: Colors.green[700],
+          elevation: 2,
         ),
         drawer: Drawer(
+          backgroundColor: Colors.grey[100],
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
@@ -101,49 +103,52 @@ class _HomeScreenState extends State<HomeScreen> {
                   backgroundImage: NetworkImage(
                       user?.photoURL ?? 'https://via.placeholder.com/150'),
                 ),
+                decoration: BoxDecoration(
+                  color: Colors.green[700],
+                ),
               ),
               ListTile(
-                leading: Icon(Icons.person),
+                leading: Icon(Icons.person, color: Colors.green[700]),
                 title: Text('Profile'),
                 onTap: () {
                   Navigator.of(context).pushNamed('/profile');
                 },
               ),
-              if (user != null) // Show Favorites only if logged in
+              if (user != null)
                 ListTile(
-                  leading: Icon(Icons.favorite),
+                  leading: Icon(Icons.favorite, color: Colors.green[700]),
                   title: Text('Favorites'),
                   onTap: () {
                     Navigator.of(context).pushNamed('/favorites');
                   },
                 ),
-              if (user != null) // Show Order History only if logged in
+              if (user != null)
                 ListTile(
-                  leading: Icon(Icons.history),
+                  leading: Icon(Icons.history, color: Colors.green[700]),
                   title: Text('Order History'),
                   onTap: () {
                     Navigator.of(context).pushNamed('/orders');
                   },
                 ),
-              if (user != null) // Show Support only if logged in
+              if (user != null)
                 ListTile(
-                  leading: Icon(Icons.support),
+                  leading: Icon(Icons.support, color: Colors.green[700]),
                   title: Text('Live Chat'),
                   onTap: () {
                     Navigator.of(context).pushNamed('/chat');
                   },
                 ),
-              if (user == null) // Show Login if logged out
+              if (user == null)
                 ListTile(
-                  leading: Icon(Icons.login),
+                  leading: Icon(Icons.login, color: Colors.green[700]),
                   title: Text('Login'),
                   onTap: () {
                     Navigator.of(context).pushNamed('/login');
                   },
                 ),
-              if (user != null) // Show Logout if logged in
+              if (user != null)
                 ListTile(
-                  leading: Icon(Icons.logout),
+                  leading: Icon(Icons.logout, color: Colors.green[700]),
                   title: Text('Logout'),
                   onTap: () async {
                     await _signOut(context);
@@ -155,31 +160,34 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(10.0),
               child: TextField(
                 controller: searchController,
                 onChanged: (query) {
-                  setState(() {}); // Trigger rebuild to update search
+                  setState(() {});
                 },
                 decoration: InputDecoration(
-                  hintText: 'Search for products',
-                  prefixIcon: Icon(Icons.search),
+                  hintText: 'Search for products...',
+                  prefixIcon: Icon(Icons.search, color: Colors.green[700]),
                   suffixIcon: searchController.text.isNotEmpty
                       ? IconButton(
-                          icon: Icon(Icons.clear),
+                          icon: Icon(Icons.clear, color: Colors.green[700]),
                           onPressed: () {
                             searchController.clear();
-                            setState(() {}); // Clear search filter
+                            setState(() {});
                           },
                         )
                       : null,
+                  filled: true,
+                  fillColor: Colors.grey[200],
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
                   ),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12),
                 ),
               ),
             ),
-            // Category Chips StreamBuilder
             StreamBuilder<List<Map<String, dynamic>>>(
               stream: fetchCategoriesStream(),
               builder: (context, snapshot) {
@@ -220,7 +228,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
             ),
-            // Product Grid StreamBuilder
             Expanded(
               child: StreamBuilder<List<Map<String, dynamic>>>(
                 stream: fetchProductsStream(),
@@ -234,13 +241,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   } else {
                     final products = snapshot.data!;
                     return GridView.builder(
-                      padding: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(10.0),
                       itemCount: products.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 8.0,
                         mainAxisSpacing: 8.0,
-                        childAspectRatio: 0.7,
+                        childAspectRatio: 0.65,
                       ),
                       itemBuilder: (context, index) {
                         final product = products[index];
@@ -263,7 +270,6 @@ class _HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: BottomNav(
           onCartTap: () {
             if (user == null) {
-              // If not logged in, prompt to log in
               Navigator.of(context).pushNamed('/login');
             } else {
               Navigator.of(context).pushNamed('/cart');
