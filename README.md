@@ -40,8 +40,8 @@
   <li>Run the app using <code>flutter run</code>.</li>
 </ol>
 
-<h2>Screenshots</h2>
-<p>screenshots</p>
+<!-- <h2>Screenshots</h2>
+<p>screenshots</p> -->
 
 <h2>Contributing</h2>
 <p>If you'd like to contribute to this project, please fork the repository and submit a pull request with your changes. Contributions are welcome!</p>
