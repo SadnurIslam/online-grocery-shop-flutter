@@ -1,47 +1,50 @@
-<h1>FreshMart - E-Commerce Mobile App</h1>
+<!-- Paste this into README.md -->
+<div>
+  <h1>FreshMart - E-Commerce Mobile App</h1>
 
-<p><strong>FreshMart</strong> is a mobile application developed using <strong>Flutter</strong>, designed to provide a seamless online grocery shopping experience for customers in the local area. The app integrates with <strong>Firebase</strong> and <strong>Firestore</strong> to ensure reliable performance, real-time updates, and secure data handling.</p>
+  <p>FreshMart is a Flutter-based mobile application that provides a smooth online grocery shopping experience for local users. It integrates with Firebase and Firestore for secure authentication, real-time product updates, and reliable data management. The app is available on the Amazon Appstore at <a href="https://www.amazon.com/FreshMart/dp/B0DP1RS76X">https://www.amazon.com/FreshMart/dp/B0DP1RS76X</a>.</p>
 
-<h2>About the Project</h2>
-<ul>
-  <li><strong>Purpose:</strong> To simplify grocery shopping for users by providing an easy-to-use platform with home delivery services.</li>
-  <li><strong>Target Area:</strong> Designed for use in local areas, catering to community-specific needs.</li>
-  <li><strong>Platform:</strong> Developed for mobile devices using <strong>Flutter</strong>.</li>
-</ul>
+  <h2>About the project</h2>
+  <p>The purpose of the project is to simplify everyday grocery shopping by offering an easy-to-use mobile platform with home delivery. FreshMart is targeted at local communities and built entirely with Flutter for mobile devices.</p>
 
-<h2>Features</h2>
-<ul>
-  <li>User registration and login with <strong>Firebase Authentication</strong>.</li>
-  <li>Real-time product updates and category management using <strong>Firestore</strong>.</li>
-  <li>Add products to a cart and place orders.</li>
-  <li>Save favorite products for easy access.</li>
-  <li>View order history.</li>
-  <li>Customer support for assistance, integrated via Firestore chat system.</li>
-</ul>
+  <h2>Features</h2>
+  <ul>
+    <li>User registration and login via Firebase Authentication</li>
+    <li>Real-time product and category management using Firestore</li>
+    <li>Add to cart and place orders</li>
+    <li>Save favorite products</li>
+    <li>View order history</li>
+    <li>Customer support via Firestore-based chat system</li>
+    <li>Payment options: bKash (test mode) and Cash on Delivery</li>
+  </ul>
 
-<h2>Technologies Used</h2>
-<ul>
-  <li><strong>Frontend:</strong> Flutter</li>
-  <li><strong>Backend:</strong> Firebase</li>
-  <li><strong>Database:</strong> Firestore</li>
-  <li><strong>Payment Integration:</strong> Bkash (Test mode), CAsh on delivery</li>
-</ul>
+  <h2>Technologies used</h2>
+  <p>Frontend: Flutter<br>
+  Backend: Firebase<br>
+  Database: Cloud Firestore<br>
+  Payments: bKash (test mode), Cash on Delivery</p>
 
-<h2>Setup Instructions</h2>
-<ol>
-  <li>Clone the repository to your local machine.</li>
-  <li>Ensure you have Flutter installed. Follow the installation guide here: <a href="https://flutter.dev/docs/get-started/install">Flutter Installation</a>.</li>
-  <li>Connect the app to your Firebase project:
-    <ul>
-      <li>Set up Firebase Authentication, Firestore, and other required Firebase services.</li>
-      <li>Download the <code>google-services.json</code> (for Android) and <code>GoogleService-Info.plist</code> (for iOS) files and place them in the respective directories.</li>
-    </ul>
-  </li>
-  <li>Run the app using <code>flutter run</code>.</li>
-</ol>
+  <h2>Setup instructions</h2>
+  <ol>
+    <li>Clone the repository: <code>git clone &lt;repo-url&gt;</code></li>
+    <li>Install Flutter (follow the official Flutter installation guide)</li>
+    <li>Set up Firebase project: enable Authentication and Firestore</li>
+    <li>Download configuration files and add them to the project:
+      <ul>
+        <li><code>google-services.json</code> → <code>android/app/</code></li>
+        <li><code>GoogleService-Info.plist</code> → <code>ios/Runner/</code></li>
+      </ul>
+    </li>
+    <li>Install dependencies and run the app:
+      <pre><code>flutter pub get
+flutter run</code></pre>
+    </li>
+  </ol>
 
-<!-- <h2>Screenshots</h2>
-<p>screenshots</p> -->
+  <h2>Contributing</h2>
+  <p>Contributions are welcome. Please fork the repository, create a branch for your feature or fix, and open a pull request.</p>
 
-<h2>Contributing</h2>
-<p>If you'd like to contribute to this project, please fork the repository and submit a pull request with your changes. Contributions are welcome!</p>
+  <h2>Contact</h2>
+  <p>Developer: Sadnur Islam<br>
+  Email: sadnurislam@gmail.com</p>
+</div>
