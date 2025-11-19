@@ -41,8 +41,6 @@ flutter run</code></pre>
     </li>
   </ol>
 
-  <h2>Contributing</h2>
-  <p>Contributions are welcome. Please fork the repository, create a branch for your feature or fix, and open a pull request.</p>
 
   <h2>Contact</h2>
   <p>Developer: Sadnur Islam<br>
